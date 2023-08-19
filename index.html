@@ -23,18 +23,17 @@
     document.addEventListener('DOMContentLoaded', function() {
         function calculateEventTime() {
             const now = new Date();
-            const startHour = 17;  // 시작 시간을 17:00으로 설정
             const cycleDuration = 40 * 60 * 60 * 1000;  // 40 hours in milliseconds
+
+            // 최초 게임 이벤트 시작 시간 설정
+            let initialEventStart = new Date(now);
+            initialEventStart.setHours(17, 0, 0, 0);
+            initialEventStart.setDate(now.getDate() - (now.getHours() < 17 ? 1 : 0));
+
+            // 현재 시간 기준으로 몇 번째 주기인지 계산
+            const cyclesPassed = Math.floor((now - initialEventStart) / cycleDuration);
             
-            // 게임 이벤트 시작 시간 설정
-            let eventStart = new Date(now);
-            eventStart.setHours(startHour, 0, 0, 0);
-
-            // 현재 시간이 17:00 이전이면 이전 주기의 시작 시간으로 설정
-            if (now < eventStart) {
-                eventStart = new Date(eventStart - cycleDuration);
-            }
-
+            let eventStart = new Date(initialEventStart.getTime() + (cyclesPassed * cycleDuration));
             const nextEventStart = new Date(eventStart.getTime() + cycleDuration);
 
             document.getElementById('currentCycle').innerText = `이번 주기 시작 시간: ${eventStart.toLocaleString()}`;
