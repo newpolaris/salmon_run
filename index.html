@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게임 이벤트 주기 확인</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>게임 이벤트 주기 확인</h2>
+<p id="currentCycle">이번 주기 시작 시간: 로딩 중...</p>
+<p id="nextCycle">다음 주기 시작 시간: 로딩 중...</p>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function calculateEventTime() {
+            const now = new Date();
+            const startHour = 17;  // 시작 시간을 17:00으로 설정
+            const cycleDuration = 40 * 60 * 60 * 1000;  // 40 hours in milliseconds
+            
+            // 게임 이벤트 시작 시간 설정
+            let eventStart = new Date(now);
+            eventStart.setHours(startHour, 0, 0, 0);
+
+            // 현재 시간이 17:00 이전이면 이전 주기의 시작 시간으로 설정
+            if (now < eventStart) {
+                eventStart = new Date(eventStart - cycleDuration);
+            }
+
+            const nextEventStart = new Date(eventStart.getTime() + cycleDuration);
+
+            document.getElementById('currentCycle').innerText = `이번 주기 시작 시간: ${eventStart.toLocaleString()}`;
+            document.getElementById('nextCycle').innerText = `다음 주기 시작 시간: ${nextEventStart.toLocaleString()}`;
+        }
+
+        calculateEventTime();
+        setInterval(calculateEventTime, 60 * 1000);  // 매 1분마다 업데이트
+    });
+</script>
+
+</body>
+</html>
